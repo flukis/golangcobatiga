@@ -1,7 +1,6 @@
 package database
 
 import (
-	"pos-services/app/models"
 	"pos-services/app/queries"
 	"pos-services/pkg/utils"
 
@@ -12,6 +11,7 @@ import (
 type Queries struct {
 	*queries.UserQueries
 	*queries.AuthQueries
+	*queries.UserLocationQueries
 }
 
 func OpenDBConnection() (*Queries, error) {
@@ -30,13 +30,9 @@ func OpenDBConnection() (*Queries, error) {
 		return nil, err
 	}
 
-	db.AutoMigrate(
-		&models.Users{},
-		&utils.PayloadSession{},
-	)
-
 	return &Queries{
-		UserQueries: &queries.UserQueries{DB: db},
-		AuthQueries: &queries.AuthQueries{DB: db},
+		UserQueries:         &queries.UserQueries{DB: db},
+		AuthQueries:         &queries.AuthQueries{DB: db},
+		UserLocationQueries: &queries.UserLocationQueries{DB: db},
 	}, nil
 }

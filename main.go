@@ -19,6 +19,7 @@ func main() {
 
 	// routes for public api
 	routes.PublicRoutes(app)
+	routes.PrivateRoute(app)
 
 	// Start server (with or without graceful shutdown).
 	if os.Getenv("STAGE_STATUS") == "dev" {

@@ -9,3 +9,6 @@ test:
 
 generatedb:
 	sqlc generate
+
+automigrate:
+	go run main.go migrate

@@ -30,13 +30,13 @@ func (q *UserQueries) GetByEmail(email string) (*models.Users, error) {
 	return &user, nil
 }
 
-func (q *UserQueries) GetById(id string) error {
+func (q *UserQueries) GetById(id string) (*models.Users, error) {
 	var user models.Users
-	res := q.DB.First(&user, id)
+	res := q.DB.Where("id = ?", id).First(&user)
 	if res.Error != nil {
-		return res.Error
+		return &user, res.Error
 	}
-	return nil
+	return &user, nil
 }
 
 func (q *UserQueries) UpdateUser(u *models.Users) error {
@@ -51,6 +51,22 @@ func (q *UserQueries) DeleteUser(id string) error {
 	res := q.DB.Delete(&models.Users{}, id)
 	if res.Error != nil {
 		return res.Error
+	}
+	return nil
+}
+
+func (q *UserQueries) AddAddress(u *models.Users, a *models.UserLocation) error {
+	err := q.DB.Model(u).Association("UserLocations").Append([]*models.UserLocation{a})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (q *UserQueries) RemoveAddress(u *models.Users, a *models.UserLocation) error {
+	err := q.DB.Model(u).Association("UserLocations").Delete([]*models.UserLocation{a})
+	if err != nil {
+		return err
 	}
 	return nil
 }
